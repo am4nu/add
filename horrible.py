@@ -1,6 +1,6 @@
 
 #define variables globally so that it can be accessed from any other function
-n=0
+
 arr=[]
 bui=[]
 lazyT=[]
@@ -13,15 +13,15 @@ def AssUpdate(root,start,end,range_start,range_end,inc):
 		bui[root]+=lazyT[root]*(end-start+1)#update the actual node
 		bui[root]%(M)
 		if(start!=end):#only you are not the end of the node push a littl further down
-			lazyT[root*2]+=lazyT[root]
 			lazyT[root*2+1]+=lazyT[root]
+			lazyT[root*2+2]+=lazyT[root]
 			lazyT[root]=0 #this node is not lazy anymore
 	if lazyA[root]!=0:#before going further down the tree update the tree
 		bui[root]=lazyA[root]*(end-start+1)#update the actual node
 		bui[root]%(M)
 		if(start!=end):#only you are not the end of the node push a littl further down
-			lazyA[root*2]=lazyA[root]
 			lazyA[root*2+1]=lazyA[root]
+			lazyA[root*2+2]=lazyA[root]
 			lazyA[root]=0 #this node is not lazy anymore
 	if (start > range_end or end < range_start):
 		 return #no overlap return from this brance of the 
@@ -29,13 +29,13 @@ def AssUpdate(root,start,end,range_start,range_end,inc):
 		bui[root]=inc*(end-start+1)
 		bui[root]=bui[root]%M
 		if (start!=end):
-			lazyT[root*2]=inc;
 			lazyT[root*2+1]=inc;
+			lazyT[root*2+2]=inc;
 		return
 		
-	AssUpdate(root*2,start,(start+end)//2,range_start,range_end,inc)
-	AssUpdate(root*2+1,(start+end)//2+1,end,range_start,range_end,inc)
-	bui[root]=bui[root*2] + bui[root*2+1]
+	AssUpdate(root*2+1,start,(start+end)//2,range_start,range_end,inc)
+	AssUpdate(root*2+2,(start+end)//2+1,end,range_start,range_end,inc)
+	bui[root]=bui[root*2+1] + bui[root*2+2]
 	bui[root]%(M)
 			
 def SumUpdate(root,start,end,range_start,range_end,inc):
@@ -45,15 +45,15 @@ def SumUpdate(root,start,end,range_start,range_end,inc):
 		bui[root]+=lazyT[root]*(end-start+1)#update the actual node
 		bui[root]%(M)
 		if(start!=end):#only you are not the end of the node push a littl further down
-			lazyT[root*2]+=lazyT[root]
 			lazyT[root*2+1]+=lazyT[root]
+			lazyT[root*2+2]+=lazyT[root]
 			lazyT[root]=0 #this node is not lazy anymore
 	if lazyA[root]!=0:#before going further down the tree update the tree
 		bui[root]=lazyA[root]*(end-start+1)#update the actual node
 		bui[root]%(M)
 		if(start!=end):#only you are not the end of the node push a littl further down
-			lazyA[root*2]+=lazyA[root]
 			lazyA[root*2+1]+=lazyA[root]
+			lazyA[root*2+2]+=lazyA[root]
 			lazyA[root]=0 #this node is not lazy anymore
 	if (start > range_end or end < range_start):
 		 return #no overlap return from this brance of the 
@@ -61,13 +61,13 @@ def SumUpdate(root,start,end,range_start,range_end,inc):
 		bui[root]+=inc*(end-start+1)
 		bui[root]=bui[root]%M
 		if (start!=end):
-			lazyT[root*2]+=inc;
 			lazyT[root*2+1]+=inc;
+			lazyT[root*2+2]+=inc;
 		return
 		
-	SumUpdate(root*2,start,(start+end)//2,range_start,range_end,inc)
-	SumUpdate(root*2+1,(start+end)//2+1,end,range_start,range_end,inc)
-	bui[root]=bui[root*2] + bui[root*2+1]
+	SumUpdate(root*2+1,start,(start+end)//2,range_start,range_end,inc)
+	SumUpdate(root*2+2,(start+end)//2+1,end,range_start,range_end,inc)
+	bui[root]=bui[root*2+1] + bui[root*2+2]
 	bui[root]%(M)
 			
 def SumQuery(root,start,end,range_start,range_end):
@@ -79,23 +79,23 @@ def SumQuery(root,start,end,range_start,range_end):
 		bui[root]+=lazyT[root]*(end-start+1)
 		bui[root]%(M)
 		if start != end:
-			lazyT[root*2]+=lazyT[root]
 			lazyT[root*2+1]+=lazyT[root]
+			lazyT[root*2+2]+=lazyT[root]
 		lazyT[root]=0
 	if lazyA[root]!=0:#before going further down the tree update the tree
 		bui[root]=lazyA[root]*(end-start+1)#update the actual node
 		bui[root]%(M)
 		if(start!=end):#only you are not the end of the node push a littl further down
-			lazyA[root*2]+=lazyA[root]
 			lazyA[root*2+1]+=lazyA[root]
+			lazyA[root*2+2]+=lazyA[root]
 		lazyA[root]=0 #this node is not lazy anymore
 	if end < range_start or start > range_end:
 		return 0
 	if start >= range_start and end <= range_end:
 		return bui[root]
-	q1=SumQuery(root*2,start, (start+end)//2,range_start,range_end)
+	q1=SumQuery(root*2+1,start, (start+end)//2,range_start,range_end)
 	q1=q1%(M)
-	q2=SumQuery(root*2+1,((start+end)//2) +1,end,range_start,range_end)
+	q2=SumQuery(root*2+2,((start+end)//2) +1,end,range_start,range_end)
 	q2=q2%(M)
 	return int(q1+q2)%(M)
 				
@@ -103,11 +103,13 @@ def SumQuery(root,start,end,range_start,range_end):
 def build(root,start,end): #recursive build tree function
 
 	if(start!=end):
-		bui[root]=build(root*2,start,(start+end)//2)+build(root*2+1,(start+end)//2+1,end)
+		bui[root]=build(root*2+1,start,(start+end)//2)+build(root*2+2,(start+end)//2+1,end)
 		#make a recursive call to sum the values of the two child node
 		bui[root]=bui[root]%(M)
+		print("i am here")
 		return int(bui[root]%(M))#return the value at the node root
 	if(start==end):#base case if the node is the leaf just assign the value of the array
+		print("i am here root and start",root,start)
 		bui[root]=arr[start]
 		return int(bui[root]%(M))
   
@@ -119,7 +121,7 @@ try:
 	#print(N,Q)
 	arr=[0]*N
 	arr[1:] = list(map(int, raw_input().split()))
-	#print(arr)
+	print(arr)
 	q=Q
 	n=N
  #arr=[0]*n #create an array to hold n number of elements in the array
@@ -134,14 +136,14 @@ try:
 	start=1
 	en=n#last member of array location
 	sucess=build(root,start,en)#call the function
-
+	print("build works")
 #SumUpdate(root,start,en,0,1,1)
 #print("sumquery",SumQuery(root,start,en,0,1))
 #print(bui)
 	#print(bui)
 
 	for i in range(q):
-		#print(bui)
+		print(bui)
 		qu = list(map(int, raw_input().split()))
 
 		if(qu[0]==4):
