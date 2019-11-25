@@ -106,10 +106,10 @@ def build(root,start,end): #recursive build tree function
 		bui[root]=build(root*2+1,start,(start+end)//2)+build(root*2+2,(start+end)//2+1,end)
 		#make a recursive call to sum the values of the two child node
 		bui[root]=bui[root]%(M)
-		print("i am here")
+		#print("i am here")
 		return int(bui[root]%(M))#return the value at the node root
 	if(start==end):#base case if the node is the leaf just assign the value of the array
-		print("i am here root and start",root,start)
+		#print("i am here root and start",root,start)
 		bui[root]=arr[start]
 		return int(bui[root]%(M))
   
@@ -136,7 +136,7 @@ try:
 	start=1
 	en=n#last member of array location
 	sucess=build(root,start,en)#call the function
-	print("build works")
+	#print("build works")
 #SumUpdate(root,start,en,0,1,1)
 #print("sumquery",SumQuery(root,start,en,0,1))
 #print(bui)
